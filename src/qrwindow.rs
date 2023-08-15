@@ -1,8 +1,10 @@
 use gtk::prelude::*;
-use gtk::{Window, WindowType};
+use gtk::{Window, WindowType, Box, ListBox, Label, ListBoxRow, Orientation};
 
 pub struct QrgenWindow {
-    myWindow: Window,
+    my_window: Window,
+    my_box: Box,
+    my_list: ListBox,
 }
 
 impl QrgenWindow {
@@ -18,12 +20,30 @@ impl QrgenWindow {
 
         // Return self
         Self {
-            myWindow: new_window
+            my_window: new_window,
+            my_box: Box::new(Orientation::Horizontal, 0),
+            my_list: ListBox::new()
         }
     }
 
+    pub fn add_item(self, text: &str) -> Self {
+        let my_row = ListBoxRow::new();
+        let my_label = Label::builder()
+            .label(text)
+            .margin(10)
+            .build();
+
+        my_row.add(&my_label);
+        self.my_list.add(&my_row);
+        // Return self
+        self
+    }
+
     pub fn build(self) -> Window {
+        self.my_box.add(&self.my_list);
+        self.my_window.add(&self.my_box);
+
         // Return QrgenWindow
-        self.myWindow
+        self.my_window
     }
 }
