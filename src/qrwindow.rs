@@ -1,5 +1,5 @@
 use gtk4::prelude::*;
-use gtk4::{ApplicationWindow, Application, Box, ListBox, Orientation};
+use gtk4::{ApplicationWindow, Application, Box, ListBox, Label, Orientation, GestureClick};
 
 use crate::generators;
 use generators::QrGenerator;
@@ -29,6 +29,22 @@ impl QrgenWindow {
 
     pub fn add_item(self, generator: QrGenerator) -> Self {
         self.my_list.append(&generator.row);
+        if let Some(child_widget) = generator.row.child() {
+            if let Some(child_label) = child_widget.downcast_ref::<Label>() {
+                let text = child_label.label();
+                let gesture = GestureClick::new();
+                gesture.set_button(gtk4::gdk::ffi::GDK_BUTTON_PRIMARY as u32);
+                gesture.connect_pressed(move |_,_,_,_| {
+                    println!("Selected item: {}", text.as_str());
+                });
+            
+                generator.row.add_controller(gesture);
+            } else {
+                panic!("Child is not a label");
+            }
+        } else {
+            panic!("No children");
+        }
 
         // Return self
         self
