@@ -3,11 +3,11 @@ use gtk4::{Entry};
 
 use crate::generators::QrGenerator;
 
-pub fn url_generator() -> QrGenerator {
-    let my_gen = QrGenerator::new("Text/URL");
+pub fn email_generator() -> QrGenerator {
+    let my_gen = QrGenerator::new("Email");
 
     let my_inp = Entry::builder()
-        .placeholder_text("Text or URL")
+        .placeholder_text("Email")
         .build();
     my_gen.disp.append(&my_inp);
 

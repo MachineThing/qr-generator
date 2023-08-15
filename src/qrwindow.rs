@@ -1,25 +1,23 @@
-use gtk::prelude::*;
-use gtk::{Window, WindowType, Box, ListBox, Label, ListBoxRow, Orientation};
+use gtk4::prelude::*;
+use gtk4::{ApplicationWindow, Application, Box, ListBox, Orientation};
 
 use crate::generators;
 use generators::QrGenerator;
 
 pub struct QrgenWindow {
-    my_window: Window,
+    my_window: ApplicationWindow,
     my_box: Box,
-    my_list: ListBox,
+    my_list: ListBox
 }
 
 impl QrgenWindow {
-    pub fn new() -> Self {
-        let new_window = Window::new(WindowType::Toplevel);
-        new_window.set_title("QR Code Generator");
-        new_window.set_default_size(750, 500);
-
-        new_window.connect_delete_event(|_, _| {
-            gtk::main_quit();
-            false.into()
-        });
+    pub fn new(app: &Application) -> Self {
+        let new_window = ApplicationWindow::builder()
+            .application(app)
+            .title("QR Code Generator")
+            .default_width(750)
+            .default_height(500)
+            .build();
 
         // Return self
         Self {
@@ -30,14 +28,15 @@ impl QrgenWindow {
     }
 
     pub fn add_item(self, generator: QrGenerator) -> Self {
-        self.my_list.add(&generator.row);
+        self.my_list.append(&generator.row);
+
         // Return self
         self
     }
 
-    pub fn build(self) -> Window {
-        self.my_box.add(&self.my_list);
-        self.my_window.add(&self.my_box);
+    pub fn build(self) -> ApplicationWindow {
+        self.my_box.append(&self.my_list);
+        self.my_window.set_child(Some(&self.my_box));
 
         // Return QrgenWindow
         self.my_window

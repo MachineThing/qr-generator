@@ -1,19 +1,25 @@
-extern crate gtk;
+extern crate gtk4;
 pub mod qrwindow;
 pub mod generators;
 
-use gtk::prelude::*;
+use gtk4::prelude::*;
+use gtk4::{glib, Application};
 use qrwindow::QrgenWindow;
 
-fn main() {
-    if let Err(err) = gtk::init() {
-        eprintln!("Failed to initialize GTK: {}", err);
-        return;
-    }
+fn main() -> glib::ExitCode {
+    let app = Application::builder()
+        .application_id("net.masonfisher.qrgen")
+        .build();
+    
+    app.connect_activate(build_ui);
 
-    let my_window = QrgenWindow::new()
-        .add_item(generators::url_box())
-        //.add_item("Email")
+    app.run()
+}
+
+fn build_ui(app: &Application) {
+    let my_window = QrgenWindow::new(app)
+        .add_item(generators::url_generator())
+        .add_item(generators::email_generator())
         //.add_item("Phone")
         //.add_item("SMS")
         //.add_item("Contact")
@@ -24,6 +30,5 @@ fn main() {
         
         .build();
 
-    my_window.show_all();
-    gtk::main();
+    my_window.present();
 }
