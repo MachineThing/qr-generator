@@ -1,6 +1,9 @@
 use gtk::prelude::*;
 use gtk::{Window, WindowType, Box, ListBox, Label, ListBoxRow, Orientation};
 
+use crate::generators;
+use generators::QrGenerator;
+
 pub struct QrgenWindow {
     my_window: Window,
     my_box: Box,
@@ -8,7 +11,7 @@ pub struct QrgenWindow {
 }
 
 impl QrgenWindow {
-    pub fn new() -> Self{
+    pub fn new() -> Self {
         let new_window = Window::new(WindowType::Toplevel);
         new_window.set_title("QR Code Generator");
         new_window.set_default_size(750, 500);
@@ -26,15 +29,8 @@ impl QrgenWindow {
         }
     }
 
-    pub fn add_item(self, text: &str) -> Self {
-        let my_row = ListBoxRow::new();
-        let my_label = Label::builder()
-            .label(text)
-            .margin(10)
-            .build();
-
-        my_row.add(&my_label);
-        self.my_list.add(&my_row);
+    pub fn add_item(self, generator: QrGenerator) -> Self {
+        self.my_list.add(&generator.row);
         // Return self
         self
     }
