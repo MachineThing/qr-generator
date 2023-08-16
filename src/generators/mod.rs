@@ -1,5 +1,5 @@
 use gtk4::prelude::*;
-use gtk4::{Box, Orientation, Label, ListBoxRow};
+use gtk4::{Orientation, Label, ListBoxRow};
 
 // Expose generators
 mod generator_url;
@@ -8,14 +8,17 @@ mod generator_email;
 pub use generator_email::email_generator;
 
 pub struct QrGenerator {
-    pub disp: Box,
+    pub disp: gtk4::Box,
     pub row: ListBoxRow,
+
+    pub clear: Box<dyn Fn()>,
+    pub generate: Box<dyn Fn() -> &'static str>
 }
 
 impl QrGenerator {
     pub fn new(name: &str) -> Self {
         // disp
-        let my_box = Box::builder()
+        let my_box = gtk4::Box::builder()
             .orientation(Orientation::Vertical)
             .hexpand(true)
             .vexpand(true)
@@ -40,7 +43,14 @@ impl QrGenerator {
         // Return self
         Self {
             disp: my_box,
-            row: my_row
+            row: my_row,
+            clear: Box::new(|| {
+                println!("If you are reading this, a placeholder for the clear function was fired\nThis shouldn\'t happen!");
+            }),
+            generate: Box::new(|| {
+                println!("If you are reading this, a placeholder for the generate function was fired\nThis shouldn\'t happen!");
+                ""
+            })
         }
     }
 }

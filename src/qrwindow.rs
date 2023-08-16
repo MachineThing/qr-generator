@@ -46,6 +46,7 @@ impl QrgenWindow {
                 gesture.connect_pressed(move |_,_,_,_| {
                     println!("Selected item: {}", &text);
                     stack_clone.set_visible_child_name(&text);
+                    let _ = &(generator.clear)();
                 });
             
                 generator.row.add_controller(gesture);
