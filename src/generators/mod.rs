@@ -22,10 +22,6 @@ impl QrGenerator {
             .orientation(Orientation::Vertical)
             .hexpand(true)
             .vexpand(true)
-            .margin_bottom(10)
-            .margin_top(10)
-            .margin_start(10)
-            .margin_end(10)
             .build();
 
         // row

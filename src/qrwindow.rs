@@ -1,5 +1,5 @@
 use gtk4::prelude::*;
-use gtk4::{ApplicationWindow, Application, Box, ListBox, Label, Stack, Orientation, GestureClick};
+use gtk4::{ApplicationWindow, Application, Box, Button, ListBox, Label, Stack, Orientation, GestureClick};
 
 use crate::generators;
 use generators::QrGenerator;
@@ -35,9 +35,34 @@ impl QrgenWindow {
                 // Get text
                 let text = child_label.label().to_string();
 
+                // Make generator box
+                let generator_box = Box::builder()
+                    .orientation(Orientation::Vertical)
+                    .hexpand(true)
+                    .vexpand(true)
+                    .margin_bottom(10)
+                    .margin_top(10)
+                    .margin_start(10)
+                    .margin_end(10)
+                    .build();
+                
+                generator_box.append(&generator.disp);
+
+                // Make generate button
+
+                let generate_button = Button::builder()
+                    .label("Generate QR Code")
+                    .build();
+                
+                generate_button.connect_clicked(move |_| {
+                    let _ = &(generator.generate)();
+                });
+                
+                generator_box.append(&generate_button);
+
                 // Append children
                 self.my_list.append(&generator.row);
-                self.my_stack.add_named(&generator.disp, Some(&text));
+                self.my_stack.add_named(&generator_box, Some(&text));
 
                 // Handle Clicking
                 let gesture = GestureClick::new();
