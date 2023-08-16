@@ -2,7 +2,10 @@ use gtk4::prelude::*;
 use gtk4::{ApplicationWindow, Application, Box, Button, ListBox, Label, Stack, Orientation, GestureClick};
 
 use crate::generators;
+use crate::showcode;
+
 use generators::QrGenerator;
+use showcode::show_code;
 
 pub struct QrgenWindow {
     my_window: ApplicationWindow,
@@ -55,7 +58,8 @@ impl QrgenWindow {
                     .build();
                 
                 generate_button.connect_clicked(move |_| {
-                    let _ = &(generator.generate)();
+                    let out = &(generator.generate)();
+                    show_code(out);
                 });
                 
                 generator_box.append(&generate_button);

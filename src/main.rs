@@ -1,5 +1,7 @@
 extern crate gtk4;
+
 pub mod qrwindow;
+pub mod showcode;
 pub mod generators;
 
 use gtk4::prelude::*;

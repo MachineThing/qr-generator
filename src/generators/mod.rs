@@ -1,5 +1,5 @@
 use gtk4::prelude::*;
-use gtk4::{Orientation, Label, ListBoxRow};
+use gtk4::{Orientation, Label, ListBoxRow, glib::GString};
 
 // Expose generators
 mod generator_url;
@@ -12,7 +12,7 @@ pub struct QrGenerator {
     pub row: ListBoxRow,
 
     pub clear: Box<dyn Fn()>,
-    pub generate: Box<dyn Fn() -> &'static str>
+    pub generate: Box<dyn Fn() -> String>
 }
 
 impl QrGenerator {
@@ -45,7 +45,7 @@ impl QrGenerator {
             }),
             generate: Box::new(|| {
                 println!("If you are reading this, a placeholder for the generate function was fired\nThis shouldn\'t happen!");
-                ""
+                "".into()
             })
         }
     }
