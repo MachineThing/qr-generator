@@ -1,5 +1,5 @@
 use gtk4::prelude::*;
-use gtk4::{Orientation, Label, ListBoxRow, glib::GString};
+use gtk4::{Orientation, Label, ListBoxRow};
 
 // Expose generators
 mod generator_url;
