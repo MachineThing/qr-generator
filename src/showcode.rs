@@ -1,7 +1,8 @@
 use gtk4::prelude::*;
-use gtk4::{Window, Image, Box, Button, Orientation};
-use gdk4::{Texture};
+use gtk4::{FileDialog, ResponseType, FileFilter, Window, Image, Box, Button, Orientation};
 use gtk4::gdk_pixbuf::{Pixbuf, Colorspace};
+use gtk4::gio::Cancellable;
+use gdk4::{Texture};
 
 use qrcode::QrCode;
 
@@ -35,11 +36,19 @@ pub fn show_code(code: &str) {
         .margin_top(10)
         .build();
 
+    let dialog_window = my_window.clone();
+    save_button.connect_clicked(move |_| {
+        let dialog = FileDialog::new();
+        dialog.set_title("Save QR Code");
+
+        dialog.save(Some(&dialog_window), Some(&Cancellable::new()), |_| {});
+    });
+
     container.append(&image_widget);
     container.append(&save_button);
     my_window.set_child(Some(&container));
 
-    my_window.show();
+    my_window.present();
 }
 
 fn generate_code(code: &str) -> Pixbuf {
