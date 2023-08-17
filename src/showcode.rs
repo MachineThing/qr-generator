@@ -1,7 +1,7 @@
 use gtk4::prelude::*;
-use gtk4::{FileDialog, ResponseType, FileFilter, Window, Image, Box, Button, Orientation};
+use gtk4::{FileDialog, FileFilter, Window, Image, Box, Button, Orientation};
 use gtk4::gdk_pixbuf::{Pixbuf, Colorspace};
-use gtk4::gio::Cancellable;
+use gtk4::gio::{Cancellable, ListStore};
 use gdk4::{Texture};
 
 use qrcode::QrCode;
@@ -38,10 +38,50 @@ pub fn show_code(code: &str) {
 
     let dialog_window = my_window.clone();
     save_button.connect_clicked(move |_| {
+        // Make filedialog
         let dialog = FileDialog::new();
         dialog.set_title("Save QR Code");
 
-        dialog.save(Some(&dialog_window), Some(&Cancellable::new()), |_| {});
+        // Add filters
+        let filter_list = ListStore::new::<FileFilter>();
+
+        let png_filter = FileFilter::new();
+        png_filter.add_mime_type("image/png");
+        png_filter.set_name(Some("PNG"));
+        filter_list.append(&png_filter);
+
+        let jpg_filter = FileFilter::new();
+        jpg_filter.add_mime_type("image/jpeg");
+        jpg_filter.set_name(Some("JPG"));
+        filter_list.append(&jpg_filter);
+
+        dialog.set_filters(Some(&filter_list));
+        dialog.set_default_filter(Some(&png_filter));
+
+        // Save file
+        let dialog_pixbuf = image_pixbuf.clone();
+
+        dialog.save(Some(&dialog_window), Cancellable::NONE, move |file| {
+            if let Ok(file) = file {
+                if let Some(filepath) = file.path() {
+                    let filepath_clone = filepath.clone();
+                    let filename = filepath_clone.display().to_string();
+                    // Guess the file type
+                    let filetype;
+                    let fileext = &filename[filename.len() - 4..];
+                    if fileext == ".png" {
+                        filetype = "png";
+                    } else if fileext == ".jpg" || fileext == "jpeg" {
+                        filetype = "jpeg";
+                    } else {
+                        panic!("TODO: Show error message here");
+                    }
+
+                    dialog_pixbuf.savev(filepath, filetype, &[]).expect("Failed to save QR code");
+                    println!("QR image saved to \"{}\"", filename);
+                }
+            }
+        });
     });
 
     container.append(&image_widget);
