@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 gtk4 = "0.7"
+gdk4 = "0.7"
 qrcode = "0.12"

@@ -1,5 +1,6 @@
 use gtk4::prelude::*;
-use gtk4::{Window, Image};
+use gtk4::{Window, Image, Box, Button, Orientation};
+use gdk4::{Texture};
 use gtk4::gdk_pixbuf::{Pixbuf, Colorspace};
 
 use qrcode::QrCode;
@@ -9,7 +10,39 @@ const SIZE_MULT: u32 = 32;
 pub fn show_code(code: &str) {
     let my_window = Window::new();
     my_window.set_title(Some("QR Code"));
+    my_window.set_default_size(400, 400);
 
+    let container = Box::builder()
+        .orientation(Orientation::Vertical)
+        .hexpand(true)
+        .vexpand(true)
+        .margin_bottom(10)
+        .margin_top(10)
+        .margin_start(10)
+        .margin_end(10)
+        .build();
+
+    let image_pixbuf = generate_code(code);
+    let image_texture = Texture::for_pixbuf(&image_pixbuf);
+
+    let image_widget = Image::builder()
+        .paintable(&image_texture)
+        .hexpand(true)
+        .vexpand(true)
+        .build();
+    let save_button = Button::builder()
+        .label("Save QR Code")
+        .margin_top(10)
+        .build();
+
+    container.append(&image_widget);
+    container.append(&save_button);
+    my_window.set_child(Some(&container));
+
+    my_window.show();
+}
+
+fn generate_code(code: &str) -> Pixbuf {
     let qr_code = QrCode::new(code).unwrap();
     let qr_image = qr_code.render()
         .light_color('0')
@@ -56,8 +89,5 @@ pub fn show_code(code: &str) {
         }
     }
 
-    let image_widget = Image::from_pixbuf(Some(&pixbuf));
-    my_window.set_child(Some(&image_widget));
-
-    my_window.show();
+    pixbuf
 }
