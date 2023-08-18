@@ -6,6 +6,9 @@ mod generator_url;
 pub use generator_url::url_generator;
 mod generator_email;
 pub use generator_email::email_generator;
+mod generator_wifi;
+pub use generator_wifi::wifi_generator;
+
 
 pub struct QrGenerator {
     pub disp: gtk4::Box,

@@ -26,7 +26,7 @@ fn build_ui(app: &Application) {
         //.add_item("SMS")
         //.add_item("Contact")
         //.add_item("Geolocation")
-        //.add_item("WiFi")
+        .add_item(generators::wifi_generator())
         //.add_item("Calendar Event")
         //.add_item("Cryptocurrency")
         
