@@ -56,13 +56,54 @@ pub fn wifi_generator() -> QrGenerator {
     let inp_ssid_set = inp_ssid.clone();
     let inp_ssid_gen = inp_ssid.clone();
     
+    let inp_pass_set = inp_pass.clone();
+    let inp_pass_gen = inp_pass.clone();
+    
+    let inp_hide_set = inp_hide.clone();
+    let inp_hide_gen = inp_hide.clone();
+    
+    let inp_encr_none_set = inp_encr_none.clone();
+    let inp_encr_none_gen = inp_encr_none.clone();
+    
+    let inp_encr_wpa_set = inp_encr_wpa.clone();
+    //let inp_encr_wpa_gen = inp_encr_wpa.clone();
+    
+    let inp_encr_wep_set = inp_encr_wep.clone();
+    let inp_encr_wep_gen = inp_encr_wep.clone();
+    
     my_gen.clear = Box::new(move || {
         inp_ssid_set.set_text("");
-    });
+        inp_pass_set.set_text("");
+        inp_hide_set.set_active(false);
+
+        inp_encr_none_set.set_active(false);
+        inp_encr_wpa_set.set_active(true);
+        inp_encr_wep_set.set_active(false);
+    }); if inp_encr_wpa_gen.is_active()
 
     my_gen.generate = Box::new(move || {
-        let text: GString = inp_ssid_gen.text();
-        text.to_string()
+        let ssid = inp_ssid_gen.text();
+        let pass: String;
+
+        let security = if inp_encr_none_gen.is_active() {
+            pass = "".to_string();
+            "nopass"
+        } else {
+            pass = format!("P:{}", inp_pass_gen.text());
+            if inp_encr_wep_gen.is_active() {
+                "WEP"
+            } else {
+                "WPA"
+            }
+        };
+        
+        let hidden = if inp_hide_gen.is_active() {
+            "true"
+        } else {
+            "false"
+        };
+
+        format!("WIFI:T:{};S:{};{};H:{};;", security, ssid, pass, hidden)
     });
 
     // Return generator
