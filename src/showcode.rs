@@ -10,8 +10,9 @@ const SIZE_MULT: u32 = 32;
 
 pub fn show_code(code: &str) {
     let my_window = Window::new();
-    my_window.set_title(Some("QR Code"));
+    my_window.set_title(Some("QR Code Preview"));
     my_window.set_default_size(400, 400);
+    my_window.set_modal(true);
 
     let container = Box::builder()
         .orientation(Orientation::Vertical)
@@ -41,18 +42,19 @@ pub fn show_code(code: &str) {
         // Make filedialog
         let dialog = FileDialog::new();
         dialog.set_title("Save QR Code");
+        dialog.set_modal(true);
 
         // Add filters
         let filter_list = ListStore::new::<FileFilter>();
 
         let png_filter = FileFilter::new();
         png_filter.add_mime_type("image/png");
-        png_filter.set_name(Some("PNG"));
+        png_filter.set_name(Some("PNG Image"));
         filter_list.append(&png_filter);
 
         let jpg_filter = FileFilter::new();
         jpg_filter.add_mime_type("image/jpeg");
-        jpg_filter.set_name(Some("JPG"));
+        jpg_filter.set_name(Some("JPG Image"));
         filter_list.append(&jpg_filter);
 
         dialog.set_filters(Some(&filter_list));
@@ -66,15 +68,14 @@ pub fn show_code(code: &str) {
                 if let Some(filepath) = file.path() {
                     let filepath_clone = filepath.clone();
                     let filename = filepath_clone.display().to_string();
-                    // Guess the file type
+                    
                     let filetype;
                     let fileext = &filename[filename.len() - 4..];
-                    if fileext == ".png" {
-                        filetype = "png";
-                    } else if fileext == ".jpg" || fileext == "jpeg" {
+                    if fileext == ".jpg" || fileext == "jpeg" {
                         filetype = "jpeg";
                     } else {
-                        panic!("TODO: Show error message here");
+                        // Save it as png by default
+                        filetype = "png";
                     }
 
                     dialog_pixbuf.savev(filepath, filetype, &[]).expect("Failed to save QR code");
