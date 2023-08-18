@@ -1,5 +1,5 @@
 use gtk4::prelude::*;
-use gtk4::{Entry, CheckButton, glib::GString};
+use gtk4::{Entry, CheckButton};
 
 use crate::generators::QrGenerator;
 
@@ -79,7 +79,7 @@ pub fn wifi_generator() -> QrGenerator {
         inp_encr_none_set.set_active(false);
         inp_encr_wpa_set.set_active(true);
         inp_encr_wep_set.set_active(false);
-    }); if inp_encr_wpa_gen.is_active()
+    });
 
     my_gen.generate = Box::new(move || {
         let ssid = inp_ssid_gen.text();

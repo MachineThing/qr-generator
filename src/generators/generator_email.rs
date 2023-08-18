@@ -1,5 +1,5 @@
 use gtk4::prelude::*;
-use gtk4::{Entry, glib::GString};
+use gtk4::{Entry};
 
 use crate::generators::QrGenerator;
 

@@ -1,5 +1,5 @@
 use gtk4::prelude::*;
-use gtk4::{Entry, glib::GString};
+use gtk4::{Entry};
 
 use crate::generators::QrGenerator;
 
@@ -19,7 +19,7 @@ pub fn url_generator() -> QrGenerator {
     });
 
     my_gen.generate = Box::new(move || {
-        let text: GString = inp_gen.text();
+        let text: &str = &inp_gen.text();
         text.to_string()
     });
 
