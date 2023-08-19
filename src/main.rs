@@ -1,18 +1,19 @@
-extern crate gtk4;
-
 pub mod qrwindow;
 pub mod showcode;
 pub mod generators;
+pub mod update_checker;
 
 use gtk4::prelude::*;
 use gtk4::{glib, Application};
+
 use qrwindow::QrgenWindow;
+use update_checker::check_for_updates;
 
 fn main() -> glib::ExitCode {
     let app = Application::builder()
         .application_id("net.masonfisher.qrgen")
         .build();
-    
+
     app.connect_activate(build_ui);
 
     app.run()
@@ -33,4 +34,5 @@ fn build_ui(app: &Application) {
         .build();
 
     my_window.present();
+    check_for_updates(Some(&my_window));
 }
