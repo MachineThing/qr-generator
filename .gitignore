@@ -1,2 +1,4 @@
 target
+gh_release
+temp
 *.glade*
