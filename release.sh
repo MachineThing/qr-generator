@@ -14,7 +14,7 @@ ln -s ./temp/linux/qrcode.png ./temp/linux/.DirIcon
 
 # Windows exec
 echo building windows
-docker run -v `pwd`:/mnt mglolenstine/gtk4-cross:rust-gtk-4.10 /bin/bash -c "build; package"
+docker run -v `pwd`:/mnt mglolenstine/gtk4-cross:rust-gtk-4.10 /bin/bash -c "/root/.cargo/bin/rustup update; build; package"
 sudo chown $(whoami):$(whoami) -R ./temp ./package
 sudo mv ./package/* ./temp/win/.
 sudo rmdir ./package
